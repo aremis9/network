@@ -14,15 +14,6 @@ class PostList(ListView):
     model = Post
 
 
-def listing(request):
-    contact_list = Contact.objects.all()
-    paginator = Paginator(contact_list, 25) # Show 25 contacts per page.
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'list.html', {'page_obj': page_obj})
-
-
 def index(request):
     if request.method == "POST":
         content = request.POST["content"]
@@ -41,7 +32,7 @@ def index(request):
         )
         new_post.save()
 
-    
+    # code (idea) from https://docs.djangoproject.com/en/3.0/topics/pagination/
     posts_list = Post.objects.all()
     paginator = Paginator(posts_list, 5)
     page_number = request.GET.get('page')
@@ -54,11 +45,20 @@ def index(request):
         'num_pages': range(1, num_pages + 1)
     })
 
+# def ownprofile(request):
+#     return HttpResponseRedirect(reverse("index"))
 
-def posts(request):
-    posts_data = list(Post.objects.all())
-    posts = Paginator(posts_data, 10)
-    num_pages = posts.num_pages
+
+def profile(request, **username):
+    if not username:
+        username = request.user
+    else:
+        username = username['username']
+    
+
+    return render(request, 'network/profile.html', {
+        'username': username
+    })
 
 
 

@@ -1,0 +1,20 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h2>@{{ username }} <span class="badge btn btn-primary" style="font-size: 0.8rem; vertical-align: middle;">Follow</span></h2>
+    <h5 style="white-space: pre;">5M Followers      1 Following</h5>
+    <hr>
+    {% if user.is_authenticated %}
+        <h3>New Post</h3>
+        <form action="{% url 'index' %}" method="POST">
+            {% csrf_token %}
+            <textarea class="form-control" name="content" id="" cols="10" rows="3" required></textarea>
+            <input class="btn btn-primary" type="submit" value="Post" id="post">
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to add new post</p>
+    {% endif %}
+
+    <hr>
+
+{% endblock %}

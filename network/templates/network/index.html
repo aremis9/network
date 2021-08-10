@@ -16,11 +16,11 @@
     
     <hr>
 
+
     {% for post in page_obj %}
-    {# Each "post" is a Post model object. #}
         <div class="card text-left" style="margin-bottom: 20px;">
             <div class="card-header" style="font-size: 0.8rem;background-color: rgb(221, 231, 248);">
-                @{{ post.poster }}
+                <a href="{% url 'profile' post.poster %}">@{{ post.poster }}</a>
             </div>
             <div class="card-body">
                 <p class="card-text">{{ post.content }}</p>
