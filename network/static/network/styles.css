@@ -1,0 +1,30 @@
+.navbar {
+    padding-left: 0;
+}
+
+.body, .navbar a {
+    margin: 10px 20px;
+}
+
+.navbar-brand {
+    margin-right: 40px !important;
+}
+
+textarea {
+    width: calc(100% - 40px) !important;
+}
+
+#post {
+    margin-top: 10px;
+}
+
+#like {
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: blue;
+    color: white;
+}
+
+#like, .likebtn {
+    font-size: 1.5rem;
+    /* color: rgb(0, 19, 83); */
+}

@@ -1,5 +1,32 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <h2>All Posts</h2>
+    <hr>
+    {% if user.is_authenticated %}
+        <h3>New Post</h3>
+        <form action="{% url 'index' %}" method="POST">
+            {% csrf_token %}
+            <textarea class="form-control" name="content" id="" cols="10" rows="3" required></textarea>
+            <input class="btn btn-primary" type="submit" value="Post" id="post">
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to add new post</p>
+    {% endif %}
+    
+    <hr>
+
+    <div class="card text-left">
+        <div class="card-header" style="font-size: 0.8rem;">
+            @Kurt
+        </div>
+        <div class="card-body">
+            <!-- <h5 class="card-title">Special title treatment</h5> -->
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="likebtn"><i class="fa fa-thumbs-up" id="like"></i></a> 0
+        </div>
+        <div class="card-footer text-muted" style="font-size: 0.7rem;">
+            2 days ago
+        </div>
+    </div>
 {% endblock %}
