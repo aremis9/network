@@ -3,8 +3,24 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import *
+
+from django.views.generic import ListView
+
+class PostList(ListView):
+    paginate_by = 5
+    model = Post
+
+
+def listing(request):
+    contact_list = Contact.objects.all()
+    paginator = Paginator(contact_list, 25) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'list.html', {'page_obj': page_obj})
 
 
 def index(request):
@@ -26,12 +42,24 @@ def index(request):
         new_post.save()
 
     
-    posts = list(Post.objects.all())
-    print(posts[0].poster)
+    posts_list = Post.objects.all()
+    paginator = Paginator(posts_list, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, "network/index.html", {
-        'posts': posts
+    
+    num_pages = paginator.num_pages
+    return render(request, 'network/index.html', {
+        'page_obj': page_obj,
+        'num_pages': range(1, num_pages + 1)
     })
+
+
+def posts(request):
+    posts_data = list(Post.objects.all())
+    posts = Paginator(posts_data, 10)
+    num_pages = posts.num_pages
+
 
 
 def login_view(request):

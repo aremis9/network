@@ -13,7 +13,7 @@ class Post(models.Model):
     likers = models.ManyToManyField(User, blank=False, related_name="likers")
 
     def __str__(self):
-        return f"Post {self.id} by {self.poster} ({self.likes} likes)"
+        return f"Post {self.id} by {self.poster}"
 
 
 class Follow(models.Model):
