@@ -27,6 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
             action = 'unfollow'
         }
 
-        
+        // var csrf = 
+
+        fetch('/follow/kurt', {
+            method: 'POST',
+            data: {
+                action: action,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            }
+        })
     })
 })

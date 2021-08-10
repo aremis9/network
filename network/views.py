@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import Http404
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import *
 
@@ -75,8 +76,9 @@ def profile(request, **username):
     })
 
 
-def follow(request):
-    followed_user = User.objects.get(username=followed)
+@csrf_exempt
+def follow(request, username):
+    followed_user = User.objects.get(username=username)
     follower_user = User.objects.get(username=request.user)
 
     followed = Follow.objects.get(user=followed_user)
@@ -84,6 +86,8 @@ def follow(request):
 
     followed.followers.add(follower_user)
     follower.following.add(followed_user)
+
+    print('hi')
 
 
 
