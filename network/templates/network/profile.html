@@ -1,23 +1,14 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h2>@{{ username }} <span class="badge btn btn-primary" style="font-size: 0.8rem; vertical-align: middle;">Follow</span></h2>
+    <h2>@{{ username }} 
+        {% if user.is_authenticated %}
+            <span class="badge btn btn-primary" style="font-size: 0.8rem; vertical-align: middle;" id="followbtn">Follow</span>
+        {% endif %}
+    </h2>
     <h5 style="white-space: pre;">5M Followers      1 Following</h5>
     <hr>
-    {% if user.is_authenticated %}
-        <h3>New Post</h3>
-        <form action="{% url 'index' %}" method="POST">
-            {% csrf_token %}
-            <textarea class="form-control" name="content" id="" cols="10" rows="3" required></textarea>
-            <input class="btn btn-primary" type="submit" value="Post" id="post">
-        </form>
-    {% else %}
-        <p><a href="{% url 'login' %}">Login</a> to add new post</p>
-    {% endif %}
-
-    <hr>
-
-    
+    <h4>{{ num_posts }} Posts</h4><br>
     {% for post in page_obj %}
         <div class="card text-left" style="margin-bottom: 20px;">
             <div class="card-header" style="font-size: 0.8rem;background-color: rgb(221, 231, 248);">
@@ -50,7 +41,7 @@
                 {% if i == page_obj.number %}
                     <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
                 {% else %}
-                    <li class="page-item"><a class="page-link" href="#">{{ i }}</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
 

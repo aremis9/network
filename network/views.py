@@ -34,7 +34,7 @@ def index(request):
         new_post.save()
 
     # code (idea) from https://docs.djangoproject.com/en/3.0/topics/pagination/
-    posts_list = Post.objects.all()
+    posts_list = Post.objects.all().order_by('-timestamp')
     paginator = Paginator(posts_list, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -55,12 +55,13 @@ def profile(request, **username):
     else:
         username = username['username']
 
-    if username not in User.objects.all():
-        raise Http404("User does not exist!")
     
-    username = User.objects.get(username=username)
+    try:
+        username = User.objects.get(username=username)
+    except User.DoesNotExist:
+        raise Http404("User does not exist!")
 
-    posts_list = Post.objects.filter(poster=username)
+    posts_list = Post.objects.filter(poster=username).order_by('-timestamp')
     paginator = Paginator(posts_list, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -70,7 +71,19 @@ def profile(request, **username):
         'username': username,
         'page_obj': page_obj,
         'num_pages': range(1, num_pages + 1),
+        'num_posts': posts_list.count()
     })
+
+
+def follow(request):
+    followed_user = User.objects.get(username=followed)
+    follower_user = User.objects.get(username=request.user)
+
+    followed = Follow.objects.get(user=followed_user)
+    follower = Follow.objects.get(user=follower_user)
+
+    followed.followers.add(follower_user)
+    follower.following.add(followed_user)
 
 
 
@@ -115,6 +128,8 @@ def register(request):
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
+            user.save()
+            user = Follow(username)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {
