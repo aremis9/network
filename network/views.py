@@ -25,11 +25,13 @@ def index(request):
         )
         new_post.save()
 
-        
-        return HttpResponseRedirect(reverse("index"))
+    
+    posts = list(Post.objects.all())
+    print(posts[0].poster)
 
-    else:
-        return render(request, "network/index.html")
+    return render(request, "network/index.html", {
+        'posts': posts
+    })
 
 
 def login_view(request):

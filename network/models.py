@@ -10,7 +10,6 @@ class Post(models.Model):
     poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name="poster")
     content = models.TextField(blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
     likers = models.ManyToManyField(User, blank=False, related_name="likers")
 
     def __str__(self):
@@ -25,7 +24,7 @@ class Follow(models.Model):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("id", "poster", "likes", "timestamp")
+    list_display = ("id", "poster", "timestamp")
 
 
 class FollowAdmin(admin.ModelAdmin):
