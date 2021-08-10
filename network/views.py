@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.http import Http404
 
 from .models import *
 
@@ -37,9 +38,8 @@ def index(request):
     paginator = Paginator(posts_list, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
-    
     num_pages = paginator.num_pages
+
     return render(request, 'network/index.html', {
         'page_obj': page_obj,
         'num_pages': range(1, num_pages + 1)
@@ -54,10 +54,22 @@ def profile(request, **username):
         username = request.user
     else:
         username = username['username']
+
+    if username not in User.objects.all():
+        raise Http404("User does not exist!")
     
+    username = User.objects.get(username=username)
+
+    posts_list = Post.objects.filter(poster=username)
+    paginator = Paginator(posts_list, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    num_pages = paginator.num_pages
 
     return render(request, 'network/profile.html', {
-        'username': username
+        'username': username,
+        'page_obj': page_obj,
+        'num_pages': range(1, num_pages + 1),
     })
 
 
