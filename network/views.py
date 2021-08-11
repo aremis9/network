@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 import json
 
 from .models import *
@@ -88,6 +89,7 @@ def profile(request, **username):
 
 
 @csrf_exempt
+@login_required
 def follow(request, username):
     followed_user = User.objects.get(username=username)
     follower_user = User.objects.get(username=request.user)
@@ -127,6 +129,25 @@ def following(request):
         'num_pages': range(1, num_pages + 1),
         'num_posts': posts.count(),
     })
+
+
+@csrf_exempt
+@login_required
+def editpost(request, id):
+    user = User.objects.get(username=request.user)
+    post = Post.objects.get(pk=id)
+    new_content = json.loads(request.body).get('content')
+
+    print(post.poster)
+    if user != post.poster:
+        return JsonResponse({"error": "You are not the creator of this post."}, status=404)
+    
+    post.content = new_content
+    post.save()
+
+    return JsonResponse({"message": "Post edited.", 'new_content': new_content}, status=201)
+
+
 
 
 def login_view(request):
