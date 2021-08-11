@@ -1,7 +1,7 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h2>@{{ username }} 
+    <h2>@<span id="user">{{ username }}</span>
         {% if user.is_authenticated and user != username%}
             <form action="">
                 {% csrf_token %}

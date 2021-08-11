@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 from .models import *
 
@@ -84,10 +85,18 @@ def follow(request, username):
     followed = Follow.objects.get(user=followed_user)
     follower = Follow.objects.get(user=follower_user)
 
-    followed.followers.add(follower_user)
-    follower.following.add(followed_user)
 
-    print('hi')
+    action = json.loads(request.body).get('action')
+    
+    if action == "follow":
+        followed.followers.add(follower_user)
+        follower.following.add(followed_user)
+    elif action == "unfollow":
+        followed.followers.remove(follower_user)
+        follower.following.remove(followed_user)
+
+
+    return HttpResponseRedirect(reverse("profile", args=(username,)))
 
 
 
