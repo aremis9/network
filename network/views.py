@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 import json
 
 from .models import *
@@ -107,6 +108,25 @@ def follow(request, username):
 
     return HttpResponseRedirect(reverse("profile", args=(username,)))
 
+
+@login_required
+def following(request):
+    user = User.objects.get(username=request.user)
+
+    following = Follow.objects.get(user=user).following.all()
+
+    posts = Post.objects.filter(poster__in=following).order_by('-timestamp')
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    num_pages = paginator.num_pages
+
+    return render(request, "network/following.html", {
+        'username': request.user,
+        'page_obj': page_obj,
+        'num_pages': range(1, num_pages + 1),
+        'num_posts': posts.count(),
+    })
 
 
 def login_view(request):
