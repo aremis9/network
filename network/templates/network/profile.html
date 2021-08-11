@@ -6,7 +6,11 @@
             <form action="">
                 {% csrf_token %}
             </form>
-            <span class="badge btn btn-primary" style="font-size: 0.8rem; vertical-align: middle;" id="followbtn">Follow</span>
+            {% if is_following %}
+                <span class="badge btn btn-secondary" style="font-size: 0.8rem; vertical-align: middle;" id="followbtn">Unfollow</span>
+            {% else %}
+                <span class="badge btn btn-primary" style="font-size: 0.8rem; vertical-align: middle;" id="followbtn">Follow</span>
+            {% endif %}
         {% endif %}
     </h2>
     

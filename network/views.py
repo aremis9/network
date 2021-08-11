@@ -69,11 +69,20 @@ def profile(request, **username):
     page_obj = paginator.get_page(page_number)
     num_pages = paginator.num_pages
 
+
+    followers = Follow.objects.get(user=username)
+    followers = list(followers.followers.all())
+    if request.user in followers:
+        is_following = True
+    else:
+        is_following = False
+
     return render(request, 'network/profile.html', {
         'username': username,
         'page_obj': page_obj,
         'num_pages': range(1, num_pages + 1),
-        'num_posts': posts_list.count()
+        'num_posts': posts_list.count(),
+        'is_following': is_following
     })
 
 
@@ -87,7 +96,7 @@ def follow(request, username):
 
 
     action = json.loads(request.body).get('action')
-    
+
     if action == "follow":
         followed.followers.add(follower_user)
         follower.following.add(followed_user)
