@@ -70,3 +70,35 @@ function savepost(id) {
         }
     })
 }
+
+
+function like(id) {
+    var post = document.querySelector(`#post${id}`)
+    var likebtn = post.querySelector('#like').style.color
+
+    fetch(`/like/${id}`, {
+        method: 'PUT',
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result.action)
+        console.log(result.likescount)
+        if (result.action == 'liked') {
+            post.querySelector('#like').style.color = 'rgb(0, 19, 83)'
+            post.querySelector('#likescount').innerHTML = result.likescount
+        }
+        else {
+            post.querySelector('#like').style.color = 'white'
+            post.querySelector('#likescount').innerHTML = result.likescount
+        }
+    })
+
+    
+    // if (likebtn == 'white') {
+    //     console.log('like')
+    // }
+    // else if (likebtn == ) {
+        
+    // }
+    
+}

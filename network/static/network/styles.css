@@ -24,6 +24,10 @@ textarea {
     color: white;
 }
 
+.likebtn:hover {
+    cursor: pointer;
+}
+
 #like, .likebtn {
     font-size: 1.5rem;
     /* color: rgb(0, 19, 83); */

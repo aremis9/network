@@ -31,7 +31,11 @@
                     <a href="#{{ post.id }}" id="editbtn" onclick="editpost({{ post.id }})">Edit</a>
                 {% endif %}
                 <br>
-                <a href="#" class="likebtn"><i class="fa fa-thumbs-up" id="like"></i></a> {{ post.likers.count }}
+                {% if user in post.likers.all %}
+                    <span href="#" class="likebtn" onclick="like({{ post.id }})"><i class="fa fa-thumbs-up" id="like" style="color: rgb(0, 19, 83);"></i></span> <span id="likescount">{{ post.likers.count }}</span>
+                {% else %}
+                    <span href="#" class="likebtn" onclick="like({{ post.id }})"><i class="fa fa-thumbs-up" id="like"></i></span> <span id="likescount">{{ post.likers.count }}</span>
+                {% endif %}
             </div>
             <div class="card-footer text-muted" style="font-size: 0.7rem;">
                 {{ post.timestamp }}

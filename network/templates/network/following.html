@@ -5,13 +5,17 @@
     <hr>
 
     {% for post in page_obj %}
-        <div class="card text-left" style="margin-bottom: 20px;">
+        <div class="card text-left" style="margin-bottom: 20px;" id="post{{ post.id }}">
             <div class="card-header" style="font-size: 0.8rem;background-color: rgb(221, 231, 248);">
                 <a href="{% url 'profile' post.poster %}">@{{ post.poster }}</a>
             </div>
             <div class="card-body">
                 <p class="card-text">{{ post.content }}</p>
-                <a href="#" class="likebtn"><i class="fa fa-thumbs-up" id="like"></i></a> {{ post.likers.count }}
+                {% if user in post.likers.all %}
+                    <span href="#" class="likebtn" onclick="like({{ post.id }})"><i class="fa fa-thumbs-up" id="like" style="color: rgb(0, 19, 83);"></i></span> <span id="likescount">{{ post.likers.count }}</span>
+                {% else %}
+                    <span href="#" class="likebtn" onclick="like({{ post.id }})"><i class="fa fa-thumbs-up" id="like"></i></span> <span id="likescount">{{ post.likers.count }}</span>
+                {% endif %}
             </div>
             <div class="card-footer text-muted" style="font-size: 0.7rem;">
                 {{ post.timestamp }}

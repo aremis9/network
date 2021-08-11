@@ -134,6 +134,9 @@ def following(request):
 @csrf_exempt
 @login_required
 def editpost(request, id):
+    if request.method != "PUT":
+        return JsonResponse({"error": "Request method must be PUT"}, status=404)
+
     user = User.objects.get(username=request.user)
     post = Post.objects.get(pk=id)
     new_content = json.loads(request.body).get('content')
@@ -148,7 +151,25 @@ def editpost(request, id):
     return JsonResponse({"message": "Post edited.", 'new_content': new_content}, status=201)
 
 
+@csrf_exempt
+@login_required
+def like(request, id):
+    if request.method != "PUT":
+        return JsonResponse({"error": "Request method must be PUT"}, status=404)
 
+    user = User.objects.get(username=request.user)
+    post = Post.objects.get(pk=id)
+
+    if user in post.likers.all():
+        action = 'unliked'
+        post.likers.remove(user)
+    else:
+        action = 'liked'
+        post.likers.add(user)
+
+    post.save()
+    likescount = post.likers.count()
+    return JsonResponse({"action": action, "likescount": likescount}, status=201)
 
 def login_view(request):
     if request.method == "POST":
