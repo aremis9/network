@@ -18,12 +18,19 @@
     <hr>
     <h4>{{ num_posts }} Posts</h4><br>
     {% for post in page_obj %}
-        <div class="card text-left" style="margin-bottom: 20px;">
+        <div class="card text-left" style="margin-bottom: 20px;" id="post{{ post.id }}">
             <div class="card-header" style="font-size: 0.8rem;background-color: rgb(221, 231, 248);">
                 <a href="{% url 'profile' post.poster %}">@{{ post.poster }}</a>
             </div>
             <div class="card-body">
-                <p class="card-text">{{ post.content }}</p>
+                <p class="card-text" id="post-content">{{ post.content }}</p>
+
+                {% if post.poster == user %}
+                    <textarea name="" class="form-control" id="edit-area" cols="10" rows="2" style="display: none;" required>{{ post.content }}</textarea>
+                    <button class="btn btn-primary" id="edit-save" onclick="savepost({{ post.id }})" style="margin-top: 10px; display: none;">Save</button>
+                    <a href="#{{ post.id }}" id="editbtn" onclick="editpost({{ post.id }})">Edit</a>
+                {% endif %}
+                <br>
                 <a href="#" class="likebtn"><i class="fa fa-thumbs-up" id="like"></i></a> {{ post.likers.count }}
             </div>
             <div class="card-footer text-muted" style="font-size: 0.7rem;">

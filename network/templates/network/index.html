@@ -24,11 +24,13 @@
             </div>
             <div class="card-body">
                 <p class="card-text" id="post-content">{{ post.content }}</p>
-                <textarea name="" class="form-control" id="edit-area" cols="10" rows="2" style="display: none;" required>{{ post.content }}</textarea>
+                <!-- <textarea name="" class="form-control" id="edit-area" cols="10" rows="2" style="display: none;" required>{{ post.content }}</textarea>
                 <button class="btn btn-primary" id="edit-save" onclick="savepost({{ post.id }})" style="margin-top: 10px; display: none;">Save</button>
-                
-                <a href="#{{ post.id }}" id="editbtn" onclick="editpost({{ post.id }})">Edit</a>
+                <a href="#{{ post.id }}" id="editbtn" onclick="editpost({{ post.id }})">Edit</a> -->
+
                 {% if post.poster == user %}
+                    <textarea name="" class="form-control" id="edit-area" cols="10" rows="2" style="display: none;" required>{{ post.content }}</textarea>
+                    <button class="btn btn-primary" id="edit-save" onclick="savepost({{ post.id }})" style="margin-top: 10px; display: none;">Save</button>
                     <a href="#{{ post.id }}" id="editbtn" onclick="editpost({{ post.id }})">Edit</a>
                 {% endif %}
                 <br>
