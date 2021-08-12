@@ -37,6 +37,8 @@ def index(request):
         )
         new_post.save()
 
+        return HttpResponseRedirect(reverse("index"))
+
     # code (idea) from https://docs.djangoproject.com/en/3.0/topics/pagination/
     posts_list = Post.objects.all().order_by('-timestamp')
     paginator = Paginator(posts_list, 10)
