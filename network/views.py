@@ -61,7 +61,6 @@ def profile(request, **username):
     else:
         username = username['username']
 
-    print(username)
     
     try:
         username = User.objects.get(username=username)
@@ -146,7 +145,6 @@ def editpost(request, id):
     post = Post.objects.get(pk=id)
     new_content = json.loads(request.body).get('content')
 
-    print(post.poster)
     if user != post.poster:
         return JsonResponse({"error": "You are not the creator of this post."}, status=404)
     
