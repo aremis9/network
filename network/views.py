@@ -15,7 +15,7 @@ from .models import *
 from django.views.generic import ListView
 
 class PostList(ListView):
-    paginate_by = 5
+    paginate_by = 10
     model = Post
 
 
@@ -39,7 +39,7 @@ def index(request):
 
     # code (idea) from https://docs.djangoproject.com/en/3.0/topics/pagination/
     posts_list = Post.objects.all().order_by('-timestamp')
-    paginator = Paginator(posts_list, 5)
+    paginator = Paginator(posts_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     num_pages = paginator.num_pages
@@ -59,6 +59,7 @@ def profile(request, **username):
     else:
         username = username['username']
 
+    print(username)
     
     try:
         username = User.objects.get(username=username)
@@ -66,21 +67,23 @@ def profile(request, **username):
         raise Http404("User does not exist!")
 
     posts_list = Post.objects.filter(poster=username).order_by('-timestamp')
-    paginator = Paginator(posts_list, 5)
+    paginator = Paginator(posts_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     num_pages = paginator.num_pages
 
 
-    followers = Follow.objects.get(user=username)
-    followers = list(followers.followers.all())
-    if request.user in followers:
+    follow = Follow.objects.get(user=username)
+    # followers = list(followers.followers.all())
+    if request.user in list(follow.followers.all()):
         is_following = True
     else:
         is_following = False
 
     return render(request, 'network/profile.html', {
         'username': username,
+        'followers': follow.followers.all().count(),
+        'following': follow.following.all().count(),
         'page_obj': page_obj,
         'num_pages': range(1, num_pages + 1),
         'num_posts': posts_list.count(),
@@ -118,7 +121,7 @@ def following(request):
     following = Follow.objects.get(user=user).following.all()
 
     posts = Post.objects.filter(poster__in=following).order_by('-timestamp')
-    paginator = Paginator(posts, 5)
+    paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     num_pages = paginator.num_pages
@@ -213,8 +216,8 @@ def register(request):
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
-            user = Follow(username)
-            user.save()
+            user_follow = Follow(user=user)
+            user_follow.save()
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."
