@@ -29,8 +29,10 @@
                     <textarea name="" class="form-control" id="edit-area" cols="10" rows="2" style="display: none;" required>{{ post.content }}</textarea>
                     <button class="btn btn-primary" id="edit-save" onclick="savepost({{ post.id }})" style="margin-top: 10px; display: none;">Save</button>
                     <a href="#{{ post.id }}" id="editbtn" onclick="editpost({{ post.id }})">Edit</a>
+                {% endif %}
+                <br>
                 
-                    <br>
+                {% if user.is_authenticated %}
                     {% if user in post.likers.all %}
                         <span href="#" class="likebtn" onclick="like({{ post.id }})"><i class="fa fa-thumbs-up" id="like" style="color: rgb(0, 19, 83);"></i></span> <span id="likescount">{{ post.likers.count }}</span>
                     {% else %}
